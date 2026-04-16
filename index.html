@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tema 11 — Piloto Completo | ETRIVIUM IAM</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --azul: #0055a0;
+  --azul-dark: #003d75;
+  --azul-light: #e8f0f8;
+  --azul-10: rgba(0,85,160,0.10);
+  --azul-05: rgba(0,85,160,0.05);
+  --verde: #16a34a;
+  --verde-bg: #f0fdf4;
+  --rojo: #dc2626;
+  --rojo-bg: #fef2f2;
+  --amber: #d97706;
+  --amber-bg: #fffbeb;
+  --gris-100: #f5f7fa;
+  --gris-200: #e8ecf0;
+  --gris-300: #d1d7df;
+  --gris-400: #9aa5b4;
+  --gris-600: #4a5568;
+  --gris-800: #2d3748;
+  --font: 'DM Sans', -apple-system, sans-serif;
+  --radius: 8px;
+  --shadow: 0 1px 3px rgba(0,0,0,0.08);
+  --shadow-lg: 0 4px 12px rgba(0,0,0,0.1);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--font); color: var(--gris-800); background: var(--gris-100); line-height: 1.7; }
+
+/* NAV TABS */
+.tab-nav {
+  position: sticky; top: 0; z-index: 100;
+  background: #fff; border-bottom: 1px solid var(--gris-200);
+  display: flex; align-items: center; justify-content: center; gap: 4px;
+  padding: 10px 24px; overflow-x: auto;
+  box-shadow: var(--shadow);
+}
+.tab-nav .logo { display: flex; align-items: center; gap: 10px; margin-right: 20px; flex-shrink: 0; }
+.tab-nav .logo img { height: 36px; }
+.tab-nav .logo-text { font-size: 10px; font-weight: 700; color: var(--azul); line-height: 1.2; text-transform: uppercase; letter-spacing: 0.03em; }
+.tab-btn {
+  padding: 8px 18px; border-radius: 6px; cursor: pointer;
+  background: transparent; color: var(--gris-600); border: 1px solid transparent;
+  font-family: var(--font); font-size: 13px; font-weight: 600;
+  transition: all .15s; white-space: nowrap;
+}
+.tab-btn:hover { background: var(--azul-05); color: var(--azul); }
+.tab-btn.active { background: var(--azul); color: #fff; border-color: var(--azul); }
+
+/* CONTENT */
+.tab-content { display: none; max-width: 960px; margin: 0 auto; padding: 32px 24px 80px; }
+.tab-content.active { display: block; }
+
+/* TYPOGRAPHY */
+h1 { font-size: 28px; font-weight: 700; color: var(--azul); margin-bottom: 8px; }
+h2 { font-size: 22px; font-weight: 700; color: var(--azul-dark); margin: 32px 0 12px; padding-bottom: 6px; border-bottom: 2px solid var(--azul-10); }
+h3 { font-size: 17px; font-weight: 700; color: var(--gris-800); margin: 24px 0 8px; }
+h4 { font-size: 15px; font-weight: 700; color: var(--gris-600); margin: 16px 0 6px; }
+p { margin-bottom: 12px; font-size: 15px; }
+ul, ol { padding-left: 24px; margin-bottom: 12px; }
+li { margin-bottom: 6px; font-size: 14px; }
+strong { color: var(--gris-800); }
+code { background: var(--azul-05); padding: 2px 6px; border-radius: 4px; font-size: 13px; font-family: 'SF Mono', 'Fira Code', monospace; }
+pre { background: var(--gris-800); color: #e2e8f0; padding: 16px 20px; border-radius: var(--radius); overflow-x: auto; margin: 12px 0; font-size: 13px; line-height: 1.5; }
+pre code { background: none; padding: 0; color: inherit; }
+
+.subtitle { font-size: 14px; color: var(--gris-400); margin-bottom: 24px; }
+.badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
+.badge-pilot { background: var(--amber-bg); color: var(--amber); }
+.badge-tier1 { background: var(--verde-bg); color: var(--verde); }
+.badge-tier2 { background: var(--azul-light); color: var(--azul); }
+.badge-pending { background: var(--rojo-bg); color: var(--rojo); }
+
+/* CARDS */
+.card { background: #fff; border-radius: var(--radius); border: 1px solid var(--gris-200); box-shadow: var(--shadow); padding: 24px; margin-bottom: 16px; }
+.card-header { background: var(--azul); color: #fff; padding: 32px 24px; border-radius: var(--radius); margin-bottom: 24px; }
+.card-header h1 { color: #fff; margin: 0; }
+.card-header .subtitle { color: rgba(255,255,255,0.7); margin: 4px 0 0; }
+
+/* TABLES */
+table { width: 100%; border-collapse: collapse; margin: 12px 0 20px; font-size: 14px; }
+th { background: var(--azul); color: #fff; padding: 10px 14px; text-align: left; font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; }
+td { padding: 10px 14px; border-bottom: 1px solid var(--gris-200); }
+tr:nth-child(even) td { background: var(--gris-100); }
+tr:hover td { background: var(--azul-05); }
+
+/* CALLOUT */
+.callout { padding: 16px 20px; border-radius: var(--radius); margin: 12px 0; font-size: 14px; }
+.callout-info { background: var(--azul-light); border-left: 4px solid var(--azul); }
+.callout-key { background: var(--amber-bg); border-left: 4px solid var(--amber); }
+.callout-ok { background: var(--verde-bg); border-left: 4px solid var(--verde); }
+.callout strong { display: block; margin-bottom: 4px; }
+
+/* TEST */
+.question { margin-bottom: 24px; }
+.q-num { font-size: 11px; font-weight: 700; color: var(--azul); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 6px; }
+.q-text { font-size: 15px; font-weight: 600; color: var(--gris-800); margin-bottom: 12px; }
+.q-options { display: flex; flex-direction: column; gap: 8px; margin-bottom: 8px; }
+.q-opt { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border: 2px solid var(--gris-200); border-radius: var(--radius); cursor: pointer; font-size: 14px; transition: all .15s; }
+.q-opt:hover { border-color: var(--azul); background: var(--azul-05); }
+.q-opt.selected { border-color: var(--azul); background: var(--azul-10); }
+.q-opt.correct { border-color: var(--verde); background: var(--verde-bg); }
+.q-opt.wrong { border-color: var(--rojo); background: var(--rojo-bg); }
+.q-letter { width: 28px; height: 28px; border-radius: 50%; background: var(--gris-100); color: var(--gris-600); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; }
+.q-opt.selected .q-letter { background: var(--azul); color: #fff; }
+.q-opt.correct .q-letter { background: var(--verde); color: #fff; }
+.q-opt.wrong .q-letter { background: var(--rojo); color: #fff; }
+.q-answer { display: none; margin-top: 8px; padding: 12px 16px; border-radius: var(--radius); background: var(--verde-bg); border-left: 4px solid var(--verde); font-size: 13px; }
+.q-answer.show { display: block; }
+.q-answer strong { color: var(--verde); }
+.q-ref { font-size: 11px; color: var(--gris-400); font-style: italic; margin-top: 4px; }
+
+/* TEST CONTROLS */
+.test-controls { display: flex; gap: 12px; margin: 24px 0; }
+.btn { padding: 10px 24px; border-radius: var(--radius); font-family: var(--font); font-size: 14px; font-weight: 600; cursor: pointer; border: none; transition: all .2s; }
+.btn-blue { background: var(--azul); color: #fff; }
+.btn-blue:hover { background: var(--azul-dark); }
+.btn-outline { background: #fff; color: var(--azul); border: 2px solid var(--azul); }
+.btn-outline:hover { background: var(--azul-05); }
+
+/* SCORE BAR */
+.score-bar { display: flex; gap: 16px; padding: 16px 20px; background: #fff; border-radius: var(--radius); border: 1px solid var(--gris-200); margin: 16px 0; }
+.score-item { text-align: center; flex: 1; }
+.score-value { font-size: 24px; font-weight: 700; color: var(--azul); }
+.score-label { font-size: 11px; color: var(--gris-400); text-transform: uppercase; font-weight: 600; }
+
+/* CHECKLIST */
+.check-item { display: flex; align-items: flex-start; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--gris-100); font-size: 14px; }
+.check-item input[type="checkbox"] { margin-top: 3px; accent-color: var(--azul); width: 16px; height: 16px; }
+
+/* CASO PRACTICO */
+.caso-q { margin-bottom: 24px; }
+.caso-q-header { display: flex; align-items: center; justify-content: space-between; cursor: pointer; padding: 12px 16px; background: var(--gris-100); border-radius: var(--radius); }
+.caso-q-header h4 { margin: 0; font-size: 14px; }
+.caso-pts { font-size: 12px; font-weight: 700; color: var(--azul); background: var(--azul-10); padding: 2px 10px; border-radius: 12px; }
+.caso-answer { display: none; padding: 16px; margin-top: 8px; background: var(--verde-bg); border-radius: var(--radius); border-left: 4px solid var(--verde); font-size: 13px; }
+.caso-answer.show { display: block; }
+
+/* PRINT */
+@media print {
+  .tab-nav { display: none; }
+  .tab-content { display: block !important; page-break-after: always; }
+  .btn, .test-controls { display: none; }
+}
+@media (max-width: 640px) {
+  .tab-nav { padding: 8px 12px; }
+  .tab-btn { padding: 6px 12px; font-size: 12px; }
+  .tab-content { padding: 16px 12px 60px; }
+  h1 { font-size: 22px; }
+  h2 { font-size: 18px; }
+  table { font-size: 12px; }
+  th, td { padding: 6px 8px; }
+}
+</style>
+</head>
+<body>
+
+<!-- TAB NAV -->
+<nav class="tab-nav">
+  <div class="logo">
+    <svg viewBox="0 0 200 60" height="36" xmlns="http://www.w3.org/2000/svg">
+      <!-- Escudo Ayuntamiento de Madrid simplificado -->
+      <g transform="translate(0,2)">
+        <!-- Corona mural (5 torres) -->
+        <rect x="6" y="0" width="4" height="8" rx="1" fill="#0055a0"/>
+        <rect x="14" y="0" width="4" height="10" rx="1" fill="#0055a0"/>
+        <rect x="22" y="0" width="4" height="8" rx="1" fill="#0055a0"/>
+        <rect x="30" y="0" width="4" height="10" rx="1" fill="#0055a0"/>
+        <rect x="38" y="0" width="4" height="8" rx="1" fill="#0055a0"/>
+        <!-- Cuerpo escudo -->
+        <path d="M4 8 h40 v28 q0 12 -20 18 q-20 -6 -20 -18 z" fill="#0055a0" rx="2"/>
+        <!-- Oso y madrono (simplificado) -->
+        <ellipse cx="24" cy="30" rx="8" ry="12" fill="none" stroke="#fff" stroke-width="1.5"/>
+        <line x1="24" y1="18" x2="24" y2="42" stroke="#fff" stroke-width="1.5"/>
+        <!-- Estrellas (7) -->
+        <g fill="#fff" font-size="5" font-family="sans-serif">
+          <circle cx="12" cy="16" r="1.5"/><circle cx="18" cy="14" r="1.5"/>
+          <circle cx="24" cy="13" r="1.5"/><circle cx="30" cy="14" r="1.5"/>
+          <circle cx="36" cy="16" r="1.5"/><circle cx="15" cy="20" r="1.5"/>
+          <circle cx="33" cy="20" r="1.5"/>
+        </g>
+      </g>
+      <!-- Texto MADRID -->
+      <text x="56" y="22" font-family="'DM Sans', sans-serif" font-size="15" font-weight="700" fill="#0055a0" letter-spacing="0.5">MADRID</text>
+      <text x="56" y="36" font-family="'DM Sans', sans-serif" font-size="8.5" font-weight="600" fill="#0055a0" letter-spacing="0.3">AYUNTAMIENTO</text>
+      <line x1="56" y1="40" x2="120" y2="40" stroke="#0055a0" stroke-width="0.5" opacity="0.4"/>
+      <text x="56" y="50" font-family="'DM Sans', sans-serif" font-size="7" font-weight="500" fill="#9aa5b4" letter-spacing="0.2">Informatica del Ayto. de Madrid</text>
+    </svg>
+  </div>
+  <button class="tab-btn active" onclick="showTab('contenido')">Contenido</button>
+  <button class="tab-btn" onclick="showTab('indice')">Indice</button>
+  <button class="tab-btn" onclick="showTab('test')">Test (15)</button>
+  <button class="tab-btn" onclick="showTab('caso')">Caso Practico</button>
+  <button class="tab-btn" onclick="showTab('fuentes')">Fuentes</button>
+  <button class="tab-btn" onclick="showTab('validacion')">Validacion</button>
+</nav>
+
+<!-- ══════════════════════════════════════════════
+     TAB 1: CONTENIDO TEORICO
+     ══════════════════════════════════════════════ -->
+<div class="tab-content active" id="tab-contenido">
+
+<div class="card-header">
+  <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px">
+    <span class="badge badge-pilot">Piloto v1.0</span>
+    <span style="font-size:12px;opacity:.7">2026-04-16</span>
+  </div>
+  <h1>Tema 11 — Informatica basica</h1>
+  <p class="subtitle">Representacion y comunicacion de la informacion: elementos constitutivos de un sistema de informacion. Caracteristicas y funciones. Arquitectura de ordenadores. Componentes internos de los equipos microinformaticos.</p>
+</div>
+
+<!-- 1. DATO E INFORMACION -->
+<h2>1. Concepto de dato e informacion</h2>
+
+<h3>1.1. Definicion de dato</h3>
+<p>Un <strong>dato</strong> es una representacion simbolica (numerica, alfabetica, alfanumerica) de un atributo o variable cuantitativa o cualitativa. Los datos describen hechos empiricos, sucesos y entidades.</p>
+<p>Los datos constituyen la <strong>minima unidad semantica</strong> y se corresponden con elementos primarios de informacion que, por si solos, son irrelevantes.</p>
+<div class="callout callout-info"><strong>Ejemplo</strong> El valor "42" es un dato. Por si solo no aporta informacion util.</div>
+
+<h3>1.2. Definicion de informacion</h3>
+<p>La <strong>informacion</strong> es el resultado de procesar, contextualizar y organizar datos, de modo que adquieren significado util para el receptor y permiten la toma de decisiones.</p>
+<div class="callout callout-info"><strong>Ejemplo</strong> "42 aprobados de 90 presentados" es informacion — aporta contexto y utilidad.</div>
+<p>La informacion debe cumplir: <strong>Integridad</strong> (datos completos) e <strong>Inequivocidad</strong> (sin ambiguedad). Ademas: relevante, precisa, completa y adecuada.</p>
+<div class="callout callout-key"><strong>Formula</strong> Informacion = Datos + Contexto (valor) + Utilidad (reducir incertidumbre)</div>
+
+<h3>1.3. Clasificacion de datos</h3>
+<table>
+<tr><th colspan="2">Segun su funcion en el SI (la mas relevante)</th></tr>
+<tr><td><strong>Datos de entrada</strong></td><td>Se introducen para su tratamiento (teclado, escaner, etc.)</td></tr>
+<tr><td><strong>Datos intermedios</strong></td><td>Generados durante el procesamiento, no visibles al usuario</td></tr>
+<tr><td><strong>Datos de salida</strong></td><td>Resultado final, presentados como informacion util</td></tr>
+</table>
+<table>
+<tr><th>Segun naturaleza</th><th>Segun variabilidad</th></tr>
+<tr><td>Numericos, Alfabeticos, Alfanumericos</td><td>Fijos/Constantes, Variables</td></tr>
+</table>
+
+<!-- 2. SISTEMAS DE INFORMACION -->
+<h2>2. Sistemas de informacion</h2>
+
+<h3>2.1. Definicion</h3>
+<p>Un <strong>sistema de informacion (SI)</strong> es un conjunto de elementos (aplicaciones, maquinaria, usuarios, procedimientos) disenado para el tratamiento de informacion, de manera que esta quede disponible de forma eficiente para su uso posterior.</p>
+<div class="callout callout-key"><strong>Atencion</strong> "Sistema de informacion" NO es sinonimo de "sistema informatico". Los SI informaticos son un subconjunto de los SI en general.</div>
+
+<h3>2.2. Componentes basicos</h3>
+<table>
+<tr><th>Componente</th><th>Descripcion</th></tr>
+<tr><td><strong>Hardware</strong></td><td>Tecnologia de almacenamiento, comunicaciones, E/S</td></tr>
+<tr><td><strong>Software</strong></td><td>Aplicaciones para recoger, almacenar, procesar y analizar datos</td></tr>
+<tr><td><strong>Datos</strong></td><td>Donde reside el valor del sistema</td></tr>
+<tr><td><strong>Procedimientos</strong></td><td>Politicas y reglas de negocio</td></tr>
+<tr><td><strong>Usuarios</strong></td><td>Componente decisivo para el exito</td></tr>
+<tr><td><strong>Red</strong></td><td>Compartir recursos entre dispositivos</td></tr>
+<tr><td><strong>Retroalimentacion</strong></td><td>Base para la mejora continua</td></tr>
+</table>
+
+<h3>2.3. Caracteristicas</h3>
+<ol>
+<li>Disponibilidad de la informacion</li>
+<li>Seleccion adecuada (sin sobrecarga)</li>
+<li>Adaptacion y personalizacion</li>
+<li>Capacidad de relacion entre datos</li>
+<li>Tiempos de respuesta adecuados</li>
+<li>Exactitud y calidad</li>
+<li>Flexibilidad</li>
+<li>Fiabilidad</li>
+<li>Seguridad (CIA: confidencialidad, integridad, disponibilidad)</li>
+<li>Copias de seguridad periodicas</li>
+</ol>
+
+<h3>2.4. Funciones principales</h3>
+<table>
+<tr><th>Funcion</th><th>Descripcion</th></tr>
+<tr><td><strong>Entrada</strong></td><td>Toma de datos (manuales o automaticas = interfaces)</td></tr>
+<tr><td><strong>Almacenamiento</strong></td><td>Recordar informacion guardada</td></tr>
+<tr><td><strong>Procesamiento</strong></td><td>Calculos segun operaciones preestablecidas. Transforma datos en informacion</td></tr>
+<tr><td><strong>Salida</strong></td><td>Informacion procesada al exterior. Puede ser entrada de otro SI</td></tr>
+</table>
+
+<h3>2.5. Tipos de SI</h3>
+<table>
+<tr><th>Tipo</th><th>Sigla</th><th>Descripcion</th></tr>
+<tr><td>Soporte a la Decision</td><td><strong>DSS</strong></td><td>Analisis de datos para toma de decisiones</td></tr>
+<tr><td>Procesamiento Transacciones</td><td><strong>TPS</strong></td><td>Gestiona transacciones de la organizacion</td></tr>
+<tr><td>Informacion Ejecutiva</td><td><strong>EIS</strong></td><td>Nivel gerencial, informacion estrategica</td></tr>
+<tr><td>Informacion Gerencial</td><td><strong>MIS</strong></td><td>Problemas empresariales en general</td></tr>
+</table>
+
+<!-- 3. ARQUITECTURA -->
+<h2>3. Arquitectura de ordenadores</h2>
+
+<p>Conjunto de <strong>reglas, normas y procedimientos</strong> que especifican las interrelaciones entre componentes logicos y fisicos de un sistema informatico.</p>
+
+<h3>3.1. Arquitectura Von Neumann</h3>
+<p>Tambien llamada <strong>arquitectura Princeton</strong> (1945). Componentes: CPU (ALU + UC + registros), <strong>memoria unica</strong> para datos e instrucciones, E/S. Conectados por buses.</p>
+<div class="callout callout-key"><strong>Cuello de botella de Von Neumann</strong> Datos e instrucciones comparten el mismo bus. No pueden buscarse instrucciones y operar datos simultaneamente. La velocidad CPU crece mas rapido que la tasa de transferencia memoria-CPU, agravando el problema.</div>
+
+<h3>3.2. Arquitectura Harvard</h3>
+<p>Mismos elementos que Von Neumann pero con <strong>memorias separadas</strong> (instrucciones y datos), cada una con su bus exclusivo.</p>
+
+<table>
+<tr><th>Caracteristica</th><th>Von Neumann</th><th>Harvard</th></tr>
+<tr><td>Memoria</td><td>Unica (datos + instrucciones)</td><td>Separada</td></tr>
+<tr><td>Buses</td><td>Compartido</td><td>Independientes</td></tr>
+<tr><td>Acceso simultaneo</td><td>No</td><td>Si</td></tr>
+<tr><td>Cuello de botella</td><td>Si</td><td>No / reducido</td></tr>
+</table>
+
+<h3>3.3. Harvard modificada</h3>
+<p>La mayoria de procesadores actuales implementan Harvard modificada: memorias separadas pero los contenidos de la memoria de instrucciones pueden accederse como datos (ej: cargar programas desde disco).</p>
+
+<!-- 4. GENERACIONES -->
+<h2>4. Generaciones de ordenadores</h2>
+
+<table>
+<tr><th>Gen.</th><th>Periodo</th><th>Tecnologia</th><th>Programacion</th><th>Ejemplo</th></tr>
+<tr><td><strong>1a</strong></td><td>1940-1952</td><td>Valvulas de vacio</td><td>Lenguaje maquina</td><td>ENIAC</td></tr>
+<tr><td><strong>2a</strong></td><td>1952-1964</td><td>Transistores</td><td>Ensamblador, Fortran, Cobol</td><td>TRADIC</td></tr>
+<tr><td><strong>3a</strong></td><td>1964-1970</td><td>Circuitos integrados (SSI/MSI)</td><td>BASIC</td><td>PDP-11</td></tr>
+<tr><td><strong>4a</strong></td><td>1970-1981</td><td>Microprocesador (LSI/VLSI)</td><td>Multiples lenguajes</td><td>IBM PC</td></tr>
+<tr><td><strong>5a</strong></td><td>1981-1991</td><td>VLSI masivo</td><td>Lenguaje natural, IA</td><td>Internet</td></tr>
+</table>
+
+<!-- 5. COMPONENTES -->
+<h2>5. Componentes internos</h2>
+
+<h3>5.1. Buses</h3>
+<table>
+<tr><th>Bus</th><th>Funcion</th></tr>
+<tr><td><strong>Bus de control</strong></td><td>Transmite senales de la UC (ordenes)</td></tr>
+<tr><td><strong>Bus de direcciones</strong></td><td>Direcciones de memoria (lectura/escritura)</td></tr>
+<tr><td><strong>Bus de datos</strong></td><td>Datos hacia/desde memoria y dispositivos</td></tr>
+</table>
+
+<h3>5.2. CISC vs RISC</h3>
+<table>
+<tr><th>Aspecto</th><th>CISC</th><th>RISC</th></tr>
+<tr><td>Instrucciones</td><td>Complejas, tamano variable</td><td>Simples, tamano fijo</td></tr>
+<tr><td>Ciclos/instruccion</td><td>4-10</td><td>1</td></tr>
+<tr><td>Acceso memoria</td><td>Cualquier instruccion</td><td>Solo carga/almacenamiento</td></tr>
+<tr><td>Paralelismo</td><td>Dificil</td><td>Favorable</td></tr>
+<tr><td>Ejemplos</td><td>Intel x86, AMD</td><td>ARM, MIPS, SPARC</td></tr>
+</table>
+<div class="callout callout-key"><strong>Dato clave</strong> x86 (PCs de escritorio) es CISC, pero internamente traduce a microinstrucciones RISC antes de ejecutar.</div>
+
+<h3>5.3. MultiThreading</h3>
+<p>Duplica unidades logicas por nucleo = 2 tareas simultaneas por nucleo. Intel: <strong>HyperThreading</strong>. AMD: <strong>SMT</strong>. Ambas virtualmente identicas.</p>
+
+<h3>5.4. Unidad de Control</h3>
+<table>
+<tr><th>Componente</th><th>Funcion</th></tr>
+<tr><td><strong>Reloj</strong></td><td>Impulsos de frecuencia constante que marcan ciclos</td></tr>
+<tr><td><strong>Contador de Programa (CP)</strong></td><td>Direccion de la siguiente instruccion a ejecutar</td></tr>
+<tr><td><strong>Registro de Instruccion (RI)</strong></td><td>Instruccion actual (codigo operacion + operandos)</td></tr>
+<tr><td><strong>Decodificador</strong></td><td>Analiza el codigo de operacion</td></tr>
+<tr><td><strong>Secuenciador</strong></td><td>Genera microordenes sincronizadas con el reloj</td></tr>
+</table>
+
+<h3>5.5. ALU — Operaciones logicas</h3>
+<table>
+<tr><th>A</th><th>B</th><th>AND</th><th>OR</th><th>XOR</th><th>NAND</th><th>NOR</th></tr>
+<tr><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>1</td><td>1</td></tr>
+<tr><td>0</td><td>1</td><td>0</td><td>1</td><td>1</td><td>1</td><td>0</td></tr>
+<tr><td>1</td><td>0</td><td>0</td><td>1</td><td>1</td><td>1</td><td>0</td></tr>
+<tr><td>1</td><td>1</td><td>1</td><td>1</td><td>0</td><td>0</td><td>0</td></tr>
+</table>
+
+<h3>5.6. Ciclo de instruccion</h3>
+<div class="card">
+<h4>Fase 1: FETCH (Busqueda)</h4>
+<ol>
+<li>UC transfiere CP → MAR (bus direcciones)</li>
+<li>Memoria entrega instruccion → MBR</li>
+<li>MBR → RI (bus datos)</li>
+</ol>
+<h4>Fase 2: EJECUCION</h4>
+<ol>
+<li>Decodificador interpreta RI → Secuenciador activa circuitos (ALU, etc.)</li>
+<li>CP se actualiza (incrementa o nueva direccion en saltos)</li>
+</ol>
+</div>
+
+<!-- 6. MEMORIA -->
+<h2>6. Memoria</h2>
+
+<h3>6.1. Jerarquia</h3>
+<div class="callout callout-key"><strong>Regla fundamental</strong> A mayor velocidad → menor capacidad (y viceversa). Piramide: Registros > Cache L1 > L2/L3 > RAM > SSD/HDD > Cinta/Nube.</div>
+
+<h3>6.2. RAM — Tabla DDR</h3>
+<table>
+<tr><th>Spec</th><th>DDR</th><th>DDR2</th><th>DDR3</th><th>DDR4</th></tr>
+<tr><td><strong>MHz</strong></td><td>266-400</td><td>667-800</td><td>1066-2400</td><td>2133-4000</td></tr>
+<tr><td><strong>Cap. max</strong></td><td>1 GB</td><td>2 GB</td><td>16 GB</td><td>64 GB</td></tr>
+<tr><td><strong>Pines</strong></td><td>184</td><td>240</td><td>240</td><td>288</td></tr>
+</table>
+<div class="callout callout-info"><strong>Nota</strong> DDR2 y DDR3 tienen 240 pines pero son fisica y electricamente incompatibles (muesca en distinta posicion).</div>
+
+<h3>6.3. Parametros RAM</h3>
+<table>
+<tr><th>Parametro</th><th>Descripcion</th></tr>
+<tr><td><strong>Dual Channel</strong></td><td>2 canales simultaneos, duplica ancho de banda. Requiere 2 modulos identicos</td></tr>
+<tr><td><strong>Latencia CAS (CL)</strong></td><td>Ciclos reloj desde peticion hasta datos. Menor = mas rapida</td></tr>
+<tr><td><strong>ECC</strong></td><td>Correccion errores 1 bit. Para servidores. Requiere soporte placa + CPU</td></tr>
+</table>
+
+<h3>6.4. Tipos de ROM</h3>
+<table>
+<tr><th>Tipo</th><th>Descripcion</th><th>Reprogramable</th></tr>
+<tr><td><strong>ROM</strong></td><td>Programada de fabrica</td><td>No</td></tr>
+<tr><td><strong>PROM</strong></td><td>Una vez (fusibles)</td><td>1 vez</td></tr>
+<tr><td><strong>EPROM</strong></td><td>Borrado UV, programacion electrica</td><td>Si</td></tr>
+<tr><td><strong>EEPROM</strong></td><td>Borrado y escritura electrica</td><td>Si</td></tr>
+<tr><td><strong>Flash</strong></td><td>EEPROM por bloques</td><td>Si (bloques)</td></tr>
+</table>
+
+<h3>6.5. BIOS vs UEFI</h3>
+<table>
+<tr><th>Aspecto</th><th>BIOS</th><th>UEFI</th></tr>
+<tr><td>Interfaz</td><td>Consola texto, solo teclado</td><td>Grafica, raton</td></tr>
+<tr><td>Codigo</td><td>16 bits</td><td>32/64 bits</td></tr>
+<tr><td>Arranque</td><td>Mas lento</td><td>Mas rapido</td></tr>
+<tr><td>Seguridad</td><td>—</td><td><strong>Secure Boot</strong></td></tr>
+<tr><td>Particiones</td><td><strong>4 MBR</strong> (2,2 TB)</td><td><strong>128 GPT</strong> (8 ZB)</td></tr>
+</table>
+
+<!-- 7. MEDIDAS -->
+<h2>7. Medidas de capacidad</h2>
+<table>
+<tr><th>Unidad</th><th>Equivalencia</th></tr>
+<tr><td><strong>Bit</strong></td><td>Unidad minima (0 o 1)</td></tr>
+<tr><td><strong>Nibble</strong></td><td>4 bits</td></tr>
+<tr><td><strong>Byte</strong></td><td>8 bits</td></tr>
+<tr><td><strong>KB</strong></td><td>1.024 Bytes</td></tr>
+<tr><td><strong>MB</strong></td><td>1.024 KB</td></tr>
+<tr><td><strong>GB</strong></td><td>1.024 MB</td></tr>
+<tr><td><strong>TB</strong></td><td>1.024 GB</td></tr>
+<tr><td><strong>PB → EB → ZB → YB</strong></td><td>x 1.024 cada nivel</td></tr>
+</table>
+
+<!-- 8. SISTEMAS NUMERACION -->
+<h2>8. Sistemas de numeracion</h2>
+<table>
+<tr><th>Sistema</th><th>Base</th><th>Simbolos</th><th>Uso</th></tr>
+<tr><td><strong>Decimal</strong></td><td>10</td><td>0-9</td><td>Uso humano</td></tr>
+<tr><td><strong>Binario</strong></td><td>2</td><td>0, 1</td><td>Interno ordenadores</td></tr>
+<tr><td><strong>Octal</strong></td><td>8</td><td>0-7</td><td>Permisos Unix</td></tr>
+<tr><td><strong>Hexadecimal</strong></td><td>16</td><td>0-F</td><td>Direcciones memoria</td></tr>
+</table>
+
+<!-- 9. CARACTERES -->
+<h2>9. Juegos de caracteres</h2>
+<table>
+<tr><th>Codificacion</th><th>Bits</th><th>Caracteres</th><th>Notas</th></tr>
+<tr><td><strong>ASCII</strong></td><td>7</td><td>128</td><td>Creado 1963. Alfabeto latino.</td></tr>
+<tr><td><strong>ASCII extendido</strong></td><td>8</td><td>256</td><td>ISO-8859-1, Windows-1252</td></tr>
+<tr><td><strong>UTF-8</strong></td><td>8-32 (variable)</td><td>Universal</td><td>Compatible ASCII. 1-4 bytes. Estandar web.</td></tr>
+<tr><td><strong>EBCDIC</strong></td><td>8</td><td>256</td><td>IBM mainframe. No compatible ASCII.</td></tr>
+</table>
+
+<div class="callout callout-ok"><strong>UTF-8 ventajas</strong> Compatible ASCII, eficiente en textos latinos, autosincronizacion, sin solapamiento de bytes. Desventaja: CJK ocupa 3 bytes (vs 2 en UTF-16).</div>
+
+</div>
+
+<!-- ══════════════════════════════════════════════
+     TAB 2: INDICE
+     ══════════════════════════════════════════════ -->
+<div class="tab-content" id="tab-indice">
+
+<div class="card-header">
+  <h1>Tema 11 — Indice</h1>
+  <p class="subtitle">Estructura del temario y conceptos clave para memorizar</p>
+</div>
+
+<div class="card">
+<h3>Estructura del tema</h3>
+<ol>
+<li><strong>Concepto de dato e informacion</strong> — Definiciones, clasificacion, relacion dato-informacion</li>
+<li><strong>Sistemas de informacion</strong> — Componentes, caracteristicas, funciones, tipos (DSS, TPS, EIS, MIS)</li>
+<li><strong>Arquitectura de ordenadores</strong> — Von Neumann, Harvard, Harvard modificada</li>
+<li><strong>Generaciones de ordenadores</strong> — 5 generaciones (1940-1991)</li>
+<li><strong>Componentes internos</strong> — Buses, CPU (CISC/RISC), UC, ALU, ciclo instruccion, modos direccionamiento</li>
+<li><strong>Memoria</strong> — RAM (DDR), ROM (tipos), BIOS/UEFI, parametros</li>
+<li><strong>Medidas de capacidad</strong> — Bit a Yottabyte</li>
+<li><strong>Sistemas de numeracion</strong> — Decimal, binario, octal, hexadecimal</li>
+<li><strong>Juegos de caracteres</strong> — ASCII, UTF-8, Unicode, EBCDIC</li>
+</ol>
+</div>
+
+<h3>Conceptos clave para memorizar</h3>
+<table>
+<tr><th>Concepto</th><th>Dato clave</th></tr>
+<tr><td>Bit</td><td>Unidad minima (0 o 1)</td></tr>
+<tr><td>Byte</td><td>8 bits</td></tr>
+<tr><td>Von Neumann</td><td>Memoria unica → cuello de botella</td></tr>
+<tr><td>Harvard</td><td>Memorias separadas → acceso simultaneo</td></tr>
+<tr><td>CISC</td><td>Instrucciones complejas, 4-10 ciclos (Intel x86)</td></tr>
+<tr><td>RISC</td><td>Instrucciones simples, 1 ciclo (ARM, MIPS)</td></tr>
+<tr><td>DDR4</td><td>288 pines, 2133-4000 MHz, hasta 64 GB</td></tr>
+<tr><td>ASCII</td><td>7 bits, 128 caracteres, 1963</td></tr>
+<tr><td>UTF-8</td><td>1-4 bytes, compatible ASCII, estandar web</td></tr>
+<tr><td>UEFI</td><td>Sucesor BIOS, Secure Boot, 128 particiones GPT</td></tr>
+<tr><td>ALU</td><td>Operaciones aritmeticas y logicas</td></tr>
+<tr><td>Ciclo instruccion</td><td>Fetch + Ejecucion</td></tr>
+<tr><td>ENIAC</td><td>1a generacion (valvulas de vacio)</td></tr>
+<tr><td>HyperThreading</td><td>2 hilos por nucleo (Intel)</td></tr>
+</table>
+
+<div class="callout callout-info"><strong>Tiempo de estudio estimado:</strong> 4-5 horas | Extension: ~8.000 palabras</div>
+
+</div>
+
+<!-- ══════════════════════════════════════════════
+     TAB 3: TEST
+     ══════════════════════════════════════════════ -->
+<div class="tab-content" id="tab-test">
+
+<div class="card-header">
+  <h1>Test de Autoevaluacion — Tema 11</h1>
+  <p class="subtitle">15 preguntas tipo A/B/C | Formato oficial oposicion C1</p>
+</div>
+
+<div class="score-bar" id="score-bar" style="display:none">
+  <div class="score-item"><div class="score-value" id="score-correct">0</div><div class="score-label">Correctas</div></div>
+  <div class="score-item"><div class="score-value" id="score-wrong" style="color:var(--rojo)">0</div><div class="score-label">Incorrectas</div></div>
+  <div class="score-item"><div class="score-value" id="score-blank" style="color:var(--gris-400)">15</div><div class="score-label">Sin responder</div></div>
+  <div class="score-item"><div class="score-value" id="score-pct">—</div><div class="score-label">Nota</div></div>
+</div>
+
+<div class="test-controls">
+  <button class="btn btn-blue" onclick="checkAllAnswers()">Corregir test</button>
+  <button class="btn btn-outline" onclick="resetTest()">Reiniciar</button>
+</div>
+
+<div id="questions-container"></div>
+
+<div class="test-controls">
+  <button class="btn btn-blue" onclick="checkAllAnswers()">Corregir test</button>
+</div>
+
+</div>
+
+<!-- ══════════════════════════════════════════════
+     TAB 4: CASO PRACTICO
+     ══════════════════════════════════════════════ -->
+<div class="tab-content" id="tab-caso">
+
+<div class="card-header">
+  <h1>Caso Practico — Tema 11</h1>
+  <p class="subtitle">Renovacion equipos informaticos Atencion al Ciudadano | 10 puntos</p>
+</div>
+
+<div class="card">
+<h3>Enunciado</h3>
+<p>El Ayuntamiento de Madrid esta renovando los equipos del area de Atencion al Ciudadano. Como tecnico auxiliar TIC, debe evaluar:</p>
+<table>
+<tr><th>Componente</th><th>Especificacion</th></tr>
+<tr><td>Procesador</td><td>Intel Core i5-13400 (x86, 10 nucleos, 16 hilos)</td></tr>
+<tr><td>Memoria RAM</td><td>16 GB DDR4-3200 (2 x 8 GB)</td></tr>
+<tr><td>Almacenamiento</td><td>SSD NVMe 512 GB</td></tr>
+<tr><td>Firmware</td><td>UEFI con Secure Boot</td></tr>
+<tr><td>Sistema Operativo</td><td>Windows 11 Pro</td></tr>
+</table>
+</div>
+
+<div class="caso-q">
+  <div class="caso-q-header" onclick="toggleCaso(1)">
+    <h4>Cuestion 1 — Arquitectura del procesador</h4>
+    <span class="caso-pts">2 pts</span>
+  </div>
+  <p style="padding:12px 16px;font-size:14px">a) Tipo de arquitectura (CISC/RISC) del i5-13400. Justifique.<br>b) Como consigue alto rendimiento con instrucciones complejas?</p>
+  <div class="caso-answer" id="caso-1">
+    <strong>Respuesta:</strong><br>
+    a) <strong>CISC</strong> — familia x86 de Intel. Conjunto amplio de instrucciones complejas.<br>
+    b) Internamente <strong>traduce instrucciones CISC a microinstrucciones RISC</strong> antes de ejecutarlas, combinando compatibilidad x86 con eficiencia RISC.
+  </div>
+</div>
+
+<div class="caso-q">
+  <div class="caso-q-header" onclick="toggleCaso(2)">
+    <h4>Cuestion 2 — MultiThreading</h4>
+    <span class="caso-pts">2 pts</span>
+  </div>
+  <p style="padding:12px 16px;font-size:14px">a) Que tecnologia permite mas hilos que nucleos? Nombre en Intel.<br>b) 10 nucleos, 16 hilos: justifique matematicamente.</p>
+  <div class="caso-answer" id="caso-2">
+    <strong>Respuesta:</strong><br>
+    a) <strong>HyperThreading</strong> (Intel) / SMT (AMD). Duplica unidades logicas por nucleo.<br>
+    b) 6 nucleos con HT: 6x2 = 12 hilos + 4 nucleos sin HT: 4x1 = 4 hilos = <strong>16 hilos total</strong> (arquitectura hibrida P-cores + E-cores).
+  </div>
+</div>
+
+<div class="caso-q">
+  <div class="caso-q-header" onclick="toggleCaso(3)">
+    <h4>Cuestion 3 — Memoria RAM</h4>
+    <span class="caso-pts">3 pts</span>
+  </div>
+  <p style="padding:12px 16px;font-size:14px">a) Pines DDR4 y rango frecuencias.<br>b) Que es Dual Channel? La config 2x8GB lo cumple?<br>c) ECC o No-ECC para Atencion al Ciudadano?</p>
+  <div class="caso-answer" id="caso-3">
+    <strong>Respuesta:</strong><br>
+    a) <strong>288 pines</strong>, 2133-4000 MHz.<br>
+    b) Dual Channel = 2 canales simultaneos, duplica ancho de banda. Requiere 2 modulos identicos (freq, capacidad, latencia). <strong>Si, 2x8GB cumple</strong> si son identicos.<br>
+    c) <strong>No-ECC</strong> — i5-13400 no soporta ECC. Puestos de trabajo no son servidores; la fiabilidad critica se garantiza a nivel de servidor (donde si usaria ECC).
+  </div>
+</div>
+
+<div class="caso-q">
+  <div class="caso-q-header" onclick="toggleCaso(4)">
+    <h4>Cuestion 4 — BIOS vs UEFI</h4>
+    <span class="caso-pts">2 pts</span>
+  </div>
+  <p style="padding:12px 16px;font-size:14px">a) 3 diferencias relevantes BIOS/UEFI.<br>b) Que es Secure Boot y por que importa en AAPP?</p>
+  <div class="caso-answer" id="caso-4">
+    <strong>Respuesta:</strong><br>
+    a) Arranque mas rapido, Secure Boot (seguridad), 128 particiones GPT vs 4 MBR.<br>
+    b) <strong>Secure Boot</strong> verifica que el SO esta autenticado digitalmente antes de cargar. Evita bootkits. En AAPP: cumple ENS (integridad arranque), protege contra malware pre-SO.
+  </div>
+</div>
+
+<div class="caso-q">
+  <div class="caso-q-header" onclick="toggleCaso(5)">
+    <h4>Cuestion 5 — Codificacion de caracteres</h4>
+    <span class="caso-pts">1 pt</span>
+  </div>
+  <p style="padding:12px 16px;font-size:14px">Codificacion para BBDD con nombres con acentos, ene, cedilla, cirilico, arabe?</p>
+  <div class="caso-answer" id="caso-5">
+    <strong>Respuesta: UTF-8</strong><br>
+    Universal (cualquier Unicode), compatible ASCII, eficiente en latin (1 byte), estandar web (W3C), autosincronizacion. Descartados: ISO-8859-1 (no cirilico/arabe), EBCDIC (propietario IBM).
+  </div>
+</div>
+
+</div>
+
+<!-- ══════════════════════════════════════════════
+     TAB 5: FUENTES
+     ══════════════════════════════════════════════ -->
+<div class="tab-content" id="tab-fuentes">
+
+<div class="card-header">
+  <h1>Registro de Fuentes — Tema 11</h1>
+  <p class="subtitle">Inventario documental para trazabilidad (pliego sec. 4.1)</p>
+</div>
+
+<h3>Fuentes Tier 1 — Primarias <span class="badge badge-tier1">maxima fiabilidad</span></h3>
+<table>
+<tr><th>ID</th><th>Titulo</th><th>Origen</th><th>Fecha</th></tr>
+<tr><td>IEEE-610</td><td>IEEE Standard Glossary of SE Terminology</td><td>IEEE</td><td>1990</td></tr>
+<tr><td>ISO-2382</td><td>ISO/IEC 2382 — IT Vocabulary</td><td>ISO/IEC</td><td>2015</td></tr>
+<tr><td>STALLINGS-COA</td><td>Computer Organization and Architecture (11th ed.)</td><td>Pearson</td><td>2018</td></tr>
+<tr><td>TANENBAUM-SO</td><td>Structured Computer Organization (6th ed.)</td><td>Pearson</td><td>2012</td></tr>
+<tr><td>INTEL-SDM</td><td>Intel 64 and IA-32 Software Developer's Manual</td><td>Intel</td><td>2024</td></tr>
+<tr><td>JEDEC-DDR</td><td>JEDEC Standards for DDR Memory</td><td>JEDEC</td><td>DDR4:2012/DDR5:2020</td></tr>
+<tr><td>UNICODE-STD</td><td>The Unicode Standard 15.0</td><td>Unicode Consortium</td><td>2022</td></tr>
+<tr><td>RFC-20</td><td>ASCII format for Network Interchange</td><td>IETF</td><td>1969</td></tr>
+<tr><td>UEFI-SPEC</td><td>UEFI Specification 2.10</td><td>UEFI Forum</td><td>2022</td></tr>
+</table>
+
+<h3>Fuentes Tier 2 — Secundarias <span class="badge badge-tier2">contraste</span></h3>
+<table>
+<tr><th>ID</th><th>Titulo</th><th>Uso</th></tr>
+<tr><td>FORO-OPOS-T11</td><td>Tema 11.docx existente</td><td>Patron de profundidad C1</td></tr>
+<tr><td>MDN-CHARSET</td><td>MDN Web Docs — Character encodings</td><td>Referencia UTF-8</td></tr>
+<tr><td>KINGSTON-RAM</td><td>Kingston — Understanding RAM</td><td>Tablas DDR divulgativas</td></tr>
+</table>
+
+<div class="callout callout-key"><strong>Tier 3 — NO utilizado</strong> Wikipedia, blogs tecnicos, Medium, StackOverflow, contenido IA sin fuente.</div>
+
+</div>
+
+<!-- ══════════════════════════════════════════════
+     TAB 6: VALIDACION
+     ══════════════════════════════════════════════ -->
+<div class="tab-content" id="tab-validacion">
+
+<div class="card-header">
+  <h1>Checklist de Validacion — Tema 11</h1>
+  <p class="subtitle">Revisor: Maria/Ana | Estado: <span class="badge badge-pending">Pendiente</span></p>
+</div>
+
+<h3>1. Exactitud tecnica</h3>
+<div class="card">
+<div class="check-item"><input type="checkbox"> Definiciones dato/informacion correctas (ISO 2382)</div>
+<div class="check-item"><input type="checkbox"> Componentes SI completos y sin omisiones</div>
+<div class="check-item"><input type="checkbox"> Von Neumann: cuello de botella correcto</div>
+<div class="check-item"><input type="checkbox"> Harvard: separacion memoria datos/instrucciones OK</div>
+<div class="check-item"><input type="checkbox"> Generaciones: fechas, tecnologias y ejemplos correctos</div>
+<div class="check-item"><input type="checkbox"> CISC vs RISC: comparativa correcta</div>
+<div class="check-item"><input type="checkbox"> Registros CPU: tipos y funciones correctas</div>
+<div class="check-item"><input type="checkbox"> Ciclo instruccion (fetch + ejecucion) correcto</div>
+<div class="check-item"><input type="checkbox"> Tabla DDR = specs JEDEC</div>
+<div class="check-item"><input type="checkbox"> BIOS vs UEFI: 4 MBR vs 128 GPT correcto</div>
+<div class="check-item"><input type="checkbox"> ASCII 7 bits, 128 chars, 1963</div>
+<div class="check-item"><input type="checkbox"> UTF-8 longitud variable, compatible ASCII</div>
+</div>
+
+<h3>2. Nivel adecuado a C1</h3>
+<div class="card">
+<div class="check-item"><input type="checkbox"> No excede nivel Tecnico Auxiliar</div>
+<div class="check-item"><input type="checkbox" style="accent-color:var(--amber)"> Modos direccionamiento: profundidad adecuada?</div>
+<div class="check-item"><input type="checkbox" style="accent-color:var(--amber)"> Tablas verdad (AND/OR/XOR): necesarias o excesivas?</div>
+<div class="check-item"><input type="checkbox" style="accent-color:var(--amber)"> FLAGS/EFLAGS/RFLAGS: nivel adecuado?</div>
+</div>
+
+<h3>3. Test (15 preguntas)</h3>
+<div class="card">
+<div class="check-item"><input type="checkbox"> 3 opciones A/B/C en todas las preguntas</div>
+<div class="check-item"><input type="checkbox"> Solo 1 respuesta correcta por pregunta</div>
+<div class="check-item"><input type="checkbox"> Enunciados claros y sin ambiguedad</div>
+<div class="check-item"><input type="checkbox"> Opciones incorrectas plausibles</div>
+<div class="check-item"><input type="checkbox"> Distribucion equilibrada entre secciones</div>
+<div class="check-item"><input type="checkbox"> Dificultad adecuada para C1</div>
+</div>
+
+<h3>4. Caso practico</h3>
+<div class="card">
+<div class="check-item"><input type="checkbox"> Supuesto realista para Ayto Madrid</div>
+<div class="check-item"><input type="checkbox"> Especificaciones tecnicas actuales</div>
+<div class="check-item"><input type="checkbox"> Respuestas orientativas correctas</div>
+<div class="check-item"><input type="checkbox"> Calculo hilos (10 nucleos → 16 hilos) correcto</div>
+</div>
+
+<h3>5. Fuentes</h3>
+<div class="card">
+<div class="check-item"><input type="checkbox"> Fuentes Tier 1 existen y estan vigentes</div>
+<div class="check-item"><input type="checkbox"> Referencias Stallings corresponden a edicion citada</div>
+<div class="check-item"><input type="checkbox"> Datos JEDEC DDR coinciden con tablas</div>
+</div>
+
+<div class="card" style="margin-top:24px;border:2px solid var(--azul)">
+<h3 style="margin-top:0">Resultado de la validacion</h3>
+<p style="font-size:14px;color:var(--gris-600)">
+  <strong>Validado por:</strong> ________________________<br>
+  <strong>Fecha:</strong> ________________________<br>
+  <strong>Decision:</strong>
+  <label style="margin-left:12px"><input type="radio" name="decision"> APROBADO</label>
+  <label style="margin-left:12px"><input type="radio" name="decision"> REQUIERE CAMBIOS</label>
+  <label style="margin-left:12px"><input type="radio" name="decision"> RECHAZADO</label>
+</p>
+</div>
+
+</div>
+
+<!-- ══════════════════════════════════════════════
+     JAVASCRIPT
+     ══════════════════════════════════════════════ -->
+<script>
+// TAB SWITCHING
+function showTab(id) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  event.target.classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+// CASO PRACTICO TOGGLE
+function toggleCaso(n) {
+  const el = document.getElementById('caso-' + n);
+  el.classList.toggle('show');
+}
+
+// TEST ENGINE
+const questions = [
+  { q: "Cual es la unidad minima de informacion en un sistema informatico?", opts: ["Byte", "Bit", "Nibble"], correct: 1, ref: "Sec. 7 — Medidas de capacidad [ISO-2382]", exp: "El bit (binary digit) es la unidad minima, representando 0 o 1. Un byte = 8 bits, un nibble = 4 bits." },
+  { q: "En la arquitectura Von Neumann, cual es la causa principal de su cuello de botella?", opts: ["La ALU no puede realizar operaciones aritmeticas y logicas simultaneamente", "Los datos y las instrucciones comparten el mismo bus de memoria", "La Unidad de Control no puede decodificar mas de una instruccion a la vez"], correct: 1, ref: "Sec. 3.1 [STALLINGS-COA, Cap. 2]", exp: "Datos e instrucciones comparten un unico bus, impidiendo acceso simultaneo." },
+  { q: "Que caracteristica diferencia fundamentalmente la arquitectura Harvard de la Von Neumann?", opts: ["Harvard utiliza microprocesadores RISC exclusivamente", "Harvard separa la memoria de instrucciones de la memoria de datos", "Harvard no utiliza buses de control"], correct: 1, ref: "Sec. 3.2 [STALLINGS-COA, Cap. 2]", exp: "Harvard divide la memoria en instrucciones y datos, cada una con su propio bus." },
+  { q: "Cual de las siguientes afirmaciones sobre procesadores RISC es correcta?", opts: ["Utilizan instrucciones complejas de 4-10 ciclos de reloj", "Solo las instrucciones de carga y almacenamiento acceden a la memoria de datos", "Son la arquitectura predominante en PCs de escritorio x86"], correct: 1, ref: "Sec. 5.2.1 [STALLINGS-COA, Cap. 15]", exp: "Caracteristica fundamental de RISC. La opcion A describe CISC. x86 es CISC." },
+  { q: "Que componente de la CPU contiene la direccion de la siguiente instruccion a ejecutar?", opts: ["Registro de Instruccion (RI)", "Contador de Programa (CP)", "Registro de Estado (FLAGS)"], correct: 1, ref: "Sec. 5.3.2 [STALLINGS-COA, Cap. 20]", exp: "El CP contiene la direccion de la siguiente instruccion. El RI tiene la actual." },
+  { q: "Cuantos bytes componen un Kilobyte (KB) segun el sistema binario?", opts: ["1.000 bytes", "1.024 bytes", "512 bytes"], correct: 1, ref: "Sec. 7 [ISO-2382]", exp: "1 KB = 2^10 = 1.024 bytes. 1.000 es la medida decimal de fabricantes." },
+  { q: "En la primera generacion de ordenadores (1940-1952), cual era el componente electronico principal?", opts: ["Transistores", "Circuitos integrados", "Valvulas de vacio"], correct: 2, ref: "Sec. 4.1 [TANENBAUM-SO, Cap. 1]", exp: "1a gen = valvulas de vacio. Transistores = 2a gen. Circuitos integrados = 3a gen." },
+  { q: "Que tipo de bus transporta las direcciones de memoria para lectura y escritura?", opts: ["Bus de datos", "Bus de control", "Bus de direcciones"], correct: 2, ref: "Sec. 5.1 [STALLINGS-COA, Cap. 3]", exp: "Bus de direcciones = direcciones. Bus de datos = datos. Bus de control = ordenes." },
+  { q: "Que tipo de ROM puede borrarse con luz ultravioleta y reprogramarse electricamente?", opts: ["PROM", "EPROM", "EEPROM"], correct: 1, ref: "Sec. 6.3", exp: "EPROM: borrado UV + programacion electrica. PROM: 1 sola vez. EEPROM: todo electrico." },
+  { q: "Cual de las siguientes NO es una funcion basica de un sistema de informacion?", opts: ["Procesamiento de informacion", "Compilacion de codigo fuente", "Almacenamiento de informacion"], correct: 1, ref: "Sec. 2.5", exp: "Las 4 funciones basicas: entrada, almacenamiento, procesamiento, salida." },
+  { q: "Cuantos pines tienen los modulos de memoria DDR4?", opts: ["240 pines", "184 pines", "288 pines"], correct: 2, ref: "Sec. 6.2.2 [JEDEC-DDR]", exp: "DDR4 = 288 pines. DDR = 184. DDR2/DDR3 = 240 (incompatibles entre si)." },
+  { q: "Que codificacion usa 1-4 bytes por caracter y es compatible con ASCII de 7 bits?", opts: ["EBCDIC", "UTF-8", "ISO-8859-1"], correct: 1, ref: "Sec. 9.3 [UNICODE-STD]", exp: "UTF-8: longitud variable 1-4 bytes, compatible ASCII. EBCDIC: 8 bits IBM. ISO-8859-1: 8 bits fijo." },
+  { q: "Que tecnologia permite a un nucleo de procesador realizar dos tareas simultaneas?", opts: ["Multiprocesamiento", "MultiThreading (HyperThreading / SMT)", "Multinucleo"], correct: 1, ref: "Sec. 5.2.3", exp: "MultiThreading duplica unidades logicas. Multiprocesamiento = varias CPUs. Multinucleo = varios nucleos." },
+  { q: "Cual de las siguientes diferencias UEFI/BIOS es correcta?", opts: ["BIOS soporta 128 particiones GPT, UEFI solo 4 MBR", "UEFI se ejecuta en 16 bits, igual que BIOS", "UEFI soporta 128 particiones GPT, BIOS se limita a 4 MBR"], correct: 2, ref: "Sec. 6.4 [UEFI-SPEC]", exp: "UEFI: 128 GPT (8 ZB). BIOS: 4 MBR (2,2 TB). UEFI en 32/64 bits, no 16." },
+  { q: "En el ciclo de instruccion, que ocurre en la fase de busqueda (FETCH)?", opts: ["La ALU ejecuta la operacion aritmetica", "La instruccion es localizada en memoria y transferida al RI", "El Contador de Programa se decrementa"], correct: 1, ref: "Sec. 5.4 [STALLINGS-COA, Cap. 12]", exp: "FETCH: CP → MAR → memoria → MBR → RI. La ALU actua en fase ejecucion. CP se incrementa, no decrementa." }
+];
+
+function renderQuestions() {
+  const container = document.getElementById('questions-container');
+  let html = '';
+  questions.forEach((q, i) => {
+    html += `<div class="question card" id="q${i}">
+      <div class="q-num">Pregunta ${i+1}</div>
+      <div class="q-text">${q.q}</div>
+      <div class="q-options">`;
+    const letters = ['A','B','C'];
+    q.opts.forEach((opt, j) => {
+      html += `<div class="q-opt" data-q="${i}" data-opt="${j}" onclick="selectOpt(${i},${j})">
+        <div class="q-letter">${letters[j]}</div>
+        <span>${opt}</span>
+      </div>`;
+    });
+    html += `</div>
+      <div class="q-answer" id="ans${i}">
+        <strong>Correcta: ${letters[q.correct]}) ${q.opts[q.correct]}</strong><br>
+        ${q.exp}<br>
+        <div class="q-ref">Ref: ${q.ref}</div>
+      </div>
+    </div>`;
+  });
+  container.innerHTML = html;
+}
+
+const userAnswers = new Array(questions.length).fill(-1);
+
+function selectOpt(qi, oi) {
+  if (document.querySelector(`#q${qi} .q-opt.correct`)) return; // already checked
+  userAnswers[qi] = oi;
+  document.querySelectorAll(`#q${qi} .q-opt`).forEach(el => el.classList.remove('selected'));
+  document.querySelector(`#q${qi} .q-opt[data-opt="${oi}"]`).classList.add('selected');
+}
+
+function checkAllAnswers() {
+  let correct = 0, wrong = 0, blank = 0;
+  questions.forEach((q, i) => {
+    const opts = document.querySelectorAll(`#q${i} .q-opt`);
+    if (userAnswers[i] === -1) { blank++; return; }
+    if (userAnswers[i] === q.correct) {
+      opts[userAnswers[i]].classList.add('correct');
+      opts[userAnswers[i]].classList.remove('selected');
+      correct++;
+    } else {
+      opts[userAnswers[i]].classList.add('wrong');
+      opts[userAnswers[i]].classList.remove('selected');
+      opts[q.correct].classList.add('correct');
+      wrong++;
+    }
+    document.getElementById(`ans${i}`).classList.add('show');
+  });
+  document.getElementById('score-bar').style.display = 'flex';
+  document.getElementById('score-correct').textContent = correct;
+  document.getElementById('score-wrong').textContent = wrong;
+  document.getElementById('score-blank').textContent = blank;
+  const score = Math.max(0, ((correct - wrong/3) / questions.length * 10)).toFixed(1);
+  document.getElementById('score-pct').textContent = score + '/10';
+  document.getElementById('score-pct').style.color = score >= 5 ? 'var(--verde)' : 'var(--rojo)';
+}
+
+function resetTest() {
+  userAnswers.fill(-1);
+  document.getElementById('score-bar').style.display = 'none';
+  renderQuestions();
+}
+
+renderQuestions();
+</script>
+
+</body>
+</html>
